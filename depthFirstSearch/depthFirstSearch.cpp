@@ -358,7 +358,7 @@ bool exist(vector<vector<char>>& board, string word)
  * https://leetcode-cn.com/problems/longest-increasing-path-in-a-matrix/
  */
 #if 0
-// Method 1
+// Method 1 超时
 vector<vector<int> > dirr = {{-1,0},{0,1},{1,0},{0,-1}};
 int dfs(vector<vector<int> > &matrix, int x, int y, vector<vector<bool> > &vis)
 {
