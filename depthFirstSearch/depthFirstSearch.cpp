@@ -352,6 +352,98 @@ bool exist(vector<vector<char>>& board, string word)
 }
 
 
+/*
+ * 9
+ * LeetCode 329 : 矩阵中的最长递增路径
+ * https://leetcode-cn.com/problems/longest-increasing-path-in-a-matrix/
+ */
+#if 0
+// Method 1
+vector<vector<int> > dirr = {{-1,0},{0,1},{1,0},{0,-1}};
+int dfs(vector<vector<int> > &matrix, int x, int y, vector<vector<bool> > &vis)
+{
+    vis[x][y] = true;
+    int res = 0;
+    for(int i = 0; i < 4; ++i)
+    {
+        int dx = x + dirr[i][0];
+        int dy = y + dirr[i][1];
+        if (dx >= 0 && dx < matrix.size() && dy >= 0 && dy < matrix[0].size() && !vis[dx][dy] && matrix[dx][dy] > matrix[x][y]) {
+            res = max(res, dfs(matrix, dx, dy, vis) );
+        }
+    }
+    vis[x][y] = false;
+    return res+1;
+}
+int longestIncreasingPath(vector< vector<int> > &matrix)
+{
+    if(matrix.empty() || matrix[0].empty())
+    {
+        return 0;
+    }
+    vector<vector<bool> > vis(matrix.size(), vector<bool>(matrix[0].size(), false));
+    int res = 0;
+    for(int i = 0; i < matrix.size(); ++i)
+    {
+        for(int j = 0; j < matrix[i].size(); ++j)
+        {
+            res = max(res, dfs(matrix, i, j, vis));
+        }
+    }
+    return res;
+}
+#endif
+#if 1
+// Method 2
+/*
+记忆化深度优先搜索
+当访问到一个单元格 (i,j) 时，如果 memo[i][j] != 0，说明该单元格的结果已经计算过，
+则直接从缓存中读取结果，如果 memo[i][j] == 0，说明该单元格的结果尚未被计算过，则进行搜索，并将计算得到的结果存入缓存中。
+*/
+vector<vector<int> > dirr = {{0,1}, {0,-1}, {-1, 0}, {1,0}};
+int dfs(vector<vector<int> >& matrix, vector<vector<int> >& memo, int x, int y)
+{
+    if(memo[x][y] > 0)
+        return memo[x][y];
+    int r = matrix.size(), c = matrix[0].size();
+    int len = 0;
+    for(int i = 0; i < dirr.size(); i++)
+    {
+        int dx = x + dirr[i][0];
+        int dy = y + dirr[i][1];
+        if((dx < 0) || (dx >= r) || (dy < 0) || (dy >= c) || (matrix[dx][dy] <= matrix[x][y]))
+            continue;
+        len = max(len, dfs(matrix, memo, dx, dy));
+    }
+    memo[x][y] = len + 1;
+    return len + 1;
+}
+int longestIncreasingPath(vector<vector<int>>& matrix)
+{
+    if(matrix.size() == 0 || matrix[0].size() == 0)
+        return 0;
+    int r = matrix.size(), c = matrix[0].size();
+    vector<vector<int> > memo(r, vector<int>(c, 0));
+    int res = 0;
+    for(int i = 0; i < r; i++)
+        for(int j =0; j < c; j++)
+        {
+            res = max(res, dfs(matrix, memo, i, j));
+        }
+    return res;
+}
+#endif
+
+
+int main()
+{
+    cout<<"depth first search"<<endl;
+    // The case answer is 140.
+    vector<vector<int> > matrix = {{0,1,2,3,4,5,6,7,8,9},{19,18,17,16,15,14,13,12,11,10},{20,21,22,23,24,25,26,27,28,29},{39,38,37,36,35,34,33,32,31,30},{40,41,42,43,44,45,46,47,48,49},{59,58,57,56,55,54,53,52,51,50},{60,61,62,63,64,65,66,67,68,69},{79,78,77,76,75,74,73,72,71,70},{80,81,82,83,84,85,86,87,88,89},{99,98,97,96,95,94,93,92,91,90},{100,101,102,103,104,105,106,107,108,109},{119,118,117,116,115,114,113,112,111,110},{120,121,122,123,124,125,126,127,128,129},{139,138,137,136,135,134,133,132,131,130},{0,0,0,0,0,0,0,0,0,0}};
+    cout<<longestIncreasingPath(matrix);
+    return 0;
+}
+
 
 /*
 void dfs()//参数用来表示状态
@@ -383,9 +475,3 @@ void dfs()//参数用来表示状态
 */
 
 
-
-int main()
-{
-    cout<<"depth first search"<<endl;
-    return 0;
-}
