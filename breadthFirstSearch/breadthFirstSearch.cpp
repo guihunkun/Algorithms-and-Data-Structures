@@ -519,3 +519,29 @@ int main()
     cout<<"Breadth First Search"<<endl;
     return 0;
 }
+
+
+
+
+/* 模版
+queue<T> q;
+while(!q.empty())
+{
+    ...//
+    int n = q.size();
+    for(int k = 0; k < n; k++)
+    {
+        T t = q.front();
+        ...//
+        q.pop();
+        for(扩展方式)
+        {
+            if(扩展方式所达到状态合法)
+            {
+                ....//根据题意来添加
+                q.push()；
+            }
+        }
+    }
+}
+*/
